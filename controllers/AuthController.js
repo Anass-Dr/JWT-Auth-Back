@@ -17,6 +17,21 @@ class AuthController {
             res.status(500).json({message: error.message});
         }
     }
+
+    async login(req, res) {
+        try {
+            // Check if user exists
+            const user = await User.findOne({email: req.body.email});
+            if (!user) return res.status(404).json({message: 'email not found'});
+
+            // Check if password is correct
+            const validPassword = await user.comparePassword(req.body.password);
+            if (!validPassword) return res.status(400).json({message: 'Invalid password'});
+
+        } catch (error) {
+            res.status(500).json({message: error.message});
+        }
+    }
 }
 
 module.exports = new AuthController();
