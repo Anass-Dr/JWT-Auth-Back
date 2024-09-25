@@ -1,14 +1,17 @@
 const Validator = require('../validation/inputValidate');
 
 async function validateRequest(req, res, next) {
-    let error = '';
+    let reqValidation;
     switch (req.path) {
         case "/api/auth/register":
-            const validation = await Validator.register(req.body);
-            if (validation.isValid) return next();
-            else error = validation.msg;
+            reqValidation = await Validator.register(req.body);
+            break;
+        case "/api/auth/login":
+            reqValidation = await Validator.login(req.body);
+            break;
     }
-    res.status(500).json({message: error});
+    if (!reqValidation.isValid) return res.status(400).json({message: reqValidation.msg});
+    next();
 }
 
 module.exports = validateRequest;
