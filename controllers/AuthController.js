@@ -1,5 +1,7 @@
 const _ = require('lodash');
+const path = require('path');
 const User = require('../models/User');
+const mailService = require('../services/mailService');
 
 class AuthController {
     async register(req, res) {
@@ -12,7 +14,16 @@ class AuthController {
 
             // Create new user
             await User.create(_.pick(req.body, ['username', 'email', 'password', 'phone', 'address']));
-            res.status(201).json({message: 'User created successfully'});
+
+            // Send email verification
+            const link = `${process.env.APP_HOST}/api/auth/verify?token=`;
+            const emailSent = await mailService.send(
+                req.body.email,
+                'Email Verification',
+                path.join(__dirname, '../views/mail/verify-email.ejs'),
+                link);
+            if (emailSent.error) return res.status(500).json({message: emailSent.error});
+            res.status(201).json({message: 'User created successfully. Check your email for verification'});
         } catch (error) {
             res.status(500).json({message: error.message});
         }
