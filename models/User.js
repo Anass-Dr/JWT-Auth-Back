@@ -46,11 +46,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Address is required']
     },
-    roles: [{
-        type: String,
+    roles: {
+        type: [String],
         enum: ['client', 'manager', 'deliver'],
         default: ['client']
-    }],
+    },
     isVerified: {
         type: Boolean,
         default: false
