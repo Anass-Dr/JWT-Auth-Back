@@ -3,7 +3,6 @@ const apiRoutes = require("./routes/api");
 const requestValidator = require("./middleware/requestValidator");
 
 require("dotenv").config();
-require("./config/database");
 
 const app = express();
 
