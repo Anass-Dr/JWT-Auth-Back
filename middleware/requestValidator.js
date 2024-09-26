@@ -9,6 +9,8 @@ async function validateRequest(req, res, next) {
         case "/api/auth/login":
             reqValidation = await Validator.login(req.body);
             break;
+        default:
+            reqValidation = {isValid: true};
     }
     if (!reqValidation.isValid) return res.status(400).json({message: reqValidation.msg});
     next();
