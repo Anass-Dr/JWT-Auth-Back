@@ -11,13 +11,13 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-async function send(email, subject, view, link) {
+async function send(email, subject, view, data) {
     try {
         const info = await transporter.sendMail({
             from: process.env.MAIL_FROM,
             to: email,
             subject: subject,
-            html: await ejs.renderFile(view, { link }),
+            html: await ejs.renderFile(view, data),
         });
         return {error: null};
     } catch (error) {
