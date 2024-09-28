@@ -66,7 +66,6 @@ class AuthController {
 
     async sendOtp(req, res) {
         try {
-            // ******** User email should added with JWT middleware
             const user = await User.findOne({email: req.body.email});
             if (!user) return res.status(404).json({message: 'User not found'});
             const otp = Math.floor(1000 + Math.random() * 9000).toString();
@@ -82,7 +81,7 @@ class AuthController {
                 );
                 if (emailSent.error) return res.status(500).json({error: emailSent.error});
             } else {
-                await SMService.send("+212610089595", `Your OTP is ${otp}`);
+                await SMService.send(user.phone, `Your OTP is ${otp}`);
             }
             res.status(200).json({message: 'OTP sent successfully'});
         } catch (error) {
@@ -96,8 +95,10 @@ class AuthController {
             const userId = await redis.get(req.body.otp);
             if (!userId) return res.status(400).json({message: 'Invalid or expired OTP'});
             await redis.del(req.body.otp);
-            const token = jwtService.generateToken(userId, 600);
-            res.status(200).json({token});
+            const accessToken = jwtService.generateToken(userId, 30 * 60);
+            const refreshToken = jwtService.generateToken(userId, 24 * 60 * 60 * 7);
+            res.cookie('refreshToken', refreshToken, {httpOnly: true});
+            res.status(200).json({accessToken});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
@@ -142,6 +143,24 @@ class AuthController {
             user.password = req.body.password;
             await user.save();
             res.status(200).json({message: 'Password reset successfully'});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
+
+    async refreshToken(req, res) {
+        try {
+            const accessToken = jwtService.generateToken(req.decoded.id, 30 * 60);
+            res.status(200).json({accessToken});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
+
+    async logout(req, res) {
+        try {
+            res.clearCookie('refreshToken');
+            res.status(200).json({message: 'Logout successful'});
         } catch (error) {
             res.status(500).json({error: error.message});
         }
