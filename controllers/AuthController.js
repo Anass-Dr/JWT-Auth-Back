@@ -82,7 +82,7 @@ class AuthController {
                 );
                 if (emailSent.error) return res.status(500).json({error: emailSent.error});
             } else {
-                const smsSent = await SMService.send("+212610089595", `Your OTP is ${otp}`);
+                await SMService.send("+212610089595", `Your OTP is ${otp}`);
             }
             res.status(200).json({message: 'OTP sent successfully'});
         } catch (error) {
@@ -96,8 +96,52 @@ class AuthController {
             const userId = await redis.get(req.body.otp);
             if (!userId) return res.status(400).json({message: 'Invalid or expired OTP'});
             await redis.del(req.body.otp);
-            const token = jwtService.generateToken(userId, Math.floor(Date.now() / 1000) + (60 * 60));
+            const token = jwtService.generateToken(userId, 600);
             res.status(200).json({token});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
+
+    async forgetPassword(req, res) {
+        try {
+            const user = await User.findOne({email: req.body.email});
+            if (!user) return res.status(404).json({message: 'User not found'});
+
+            const token = jwtService.generateToken(user._id, 600);
+            const emailSent = await mailService.send(
+                user.email,
+                'Reset Password',
+                path.join(__dirname, '../views/mail/reset-password.ejs'),
+                {link: `${process.env.APP_HOST}/reset-password?token=${token}`}
+            );
+            if (emailSent.error) return res.status(500).json({error: emailSent.error});
+            res.status(200).json({message: 'Reset password link sent successfully'});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
+
+    async verifyResetPassword(req, res) {
+        try {
+            const decoded = req.decoded;
+            const user = await User.findById(decoded.id);
+            if (!user) return res.status(404).json({message: 'User not found'});
+            const token = jwtService.generateToken(user._id, 300);
+            res.status(200).json({token});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
+
+    async resetPassword(req, res) {
+        try {
+            const decoded = req.decoded;
+            const user = await User.findById(decoded.id);
+            if (!user) return res.status(404).json({message: 'User not found'});
+            user.password = req.body.password;
+            await user.save();
+            res.status(200).json({message: 'Password reset successfully'});
         } catch (error) {
             res.status(500).json({error: error.message});
         }

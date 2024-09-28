@@ -1,15 +1,17 @@
 const jwtService = require("../services/jwtService");
 
-function validateQuery(req, res, next) {
-    const token = req.query.token || '';
-    const decoded = jwtService.verifyToken(token);
-    if (!decoded) return res.status(401).json({message: 'Unauthorized'});
-    req.decoded = decoded;
-    next();
+function validate(method) {
+    return (req, res, next) => {
+        try {
+            const token = req[method].token || '';
+            const decoded = jwtService.verifyToken(token);
+            if (!decoded) return res.status(401).json({message: 'Unauthorized'});
+            req.decoded = decoded;
+            next();
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
+    }
 }
 
-function validateHeader(req, res, next) {
-    next();
-}
-
-module.exports = { validateQuery, validateHeader };
+module.exports = { validateQuery: validate('query'), validateParams: validate('params') };
