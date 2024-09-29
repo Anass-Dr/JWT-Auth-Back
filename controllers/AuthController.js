@@ -6,6 +6,8 @@ const jwtService = require("../services/jwtService");
 const sendEmailVerification = require('../helpers/sendEmailVerification');
 const getRedisClient = require('../config/redis');
 const SMService = require('../services/SMService');
+const sendAuthTokens = require('../helpers/sendAuthTokens');
+const SecurityManager = require('../helpers/SecurityManager');
 
 class AuthController {
     async register(req, res) {
@@ -57,7 +59,12 @@ class AuthController {
                 if (emailSent.error) return res.status(500).json({error: emailSent.error});
                 return res.status(201).json({message: 'User not verified. Check your email for verification'});
             }
-            res.status(200).json({message: "Login successful, choose a method to verify your account"});
+
+            // Check user fingerprint
+            if (await SecurityManager.isNewDeviceOrLocation(user.id, req))
+                return res.status(401).json({message: 'Unauthorized device or location'});
+
+            return await sendAuthTokens(res, user._id);
 
         } catch (error) {
             res.status(500).json({error: error.message});
@@ -95,10 +102,8 @@ class AuthController {
             const userId = await redis.get(req.body.otp);
             if (!userId) return res.status(400).json({message: 'Invalid or expired OTP'});
             await redis.del(req.body.otp);
-            const accessToken = jwtService.generateToken(userId, 30 * 60);
-            const refreshToken = jwtService.generateToken(userId, 24 * 60 * 60 * 7);
-            res.cookie('refreshToken', refreshToken, {httpOnly: true});
-            res.status(200).json({accessToken});
+            await SecurityManager.updateLoginHistory(userId, req);
+            return sendAuthTokens(res, userId);
         } catch (error) {
             res.status(500).json({error: error.message});
         }
