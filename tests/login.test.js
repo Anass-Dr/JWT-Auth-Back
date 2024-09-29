@@ -2,7 +2,6 @@ const request = require('supertest');
 const app = require('../app');
 const mongoose = require("mongoose");
 const User = require('../models/User');
-const SecurityManager = require("../helpers/SecurityManager");
 
 beforeEach(async () => {
     await mongoose.connect( process.env.TEST_DB_URI);
