@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Phone number is required'],
         validate: {
             validator: function(v) {
-                return /^\d{10}$/.test(v);
+                return /^\+\d{1,3}\d{4,14}$/.test(v);
             },
             message: props => `${props.value} is not a valid phone number!`
         }
@@ -46,11 +46,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Address is required']
     },
-    roles: [{
-        type: String,
+    roles: {
+        type: [String],
         enum: ['client', 'manager', 'deliver'],
         default: ['client']
-    }],
+    },
     isVerified: {
         type: Boolean,
         default: false
@@ -58,6 +58,16 @@ const userSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    loginHistory: {
+        history: [{
+            fingerprint: String,
+            location: String,
+        }],
+        lastLogin: {
+            type: Date,
+            default: Date.now
+        },
     }
 });
 

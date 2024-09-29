@@ -5,6 +5,7 @@ const schemas = {
         .alphanum()
         .min(3)
         .max(30)
+        .lowercase()
         .required(),
     email: Joi.string().email().required(),
     password: Joi
@@ -16,10 +17,10 @@ const schemas = {
         }),
     phone: Joi
         .string()
-        .pattern(new RegExp('^[0-9]{10}$'))
+        .pattern(new RegExp('^\\+\\d{1,3}\\d{4,14}$'))
         .required()
         .messages({
-        'string.pattern.base': 'Phone number must be 10 digits long',
+        'string.pattern.base': 'Phone number must be in international format',
     }),
     address: Joi.string().required(),
 };

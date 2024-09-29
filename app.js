@@ -1,13 +1,17 @@
+require("dotenv").config();
+require("./config/database");
 const express = require("express");
+const cookieParser = require('cookie-parser');
+
 const apiRoutes = require("./routes/api");
 const requestValidator = require("./middleware/requestValidator");
 
-require("dotenv").config();
 
 const app = express();
 
 // middlewares
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static("public"));
 app.use(requestValidator);
 app.use("/api", apiRoutes);
