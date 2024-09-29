@@ -22,7 +22,7 @@ describe('POST /auth/register', () => {
             username: "anass",
             email: "anass@gmail.com",
             password: "Anass@2000",
-            phone: "0600000000",
+            phone: "+212600000000",
             address: "California, USA"
         };
         const response = await request(app)
