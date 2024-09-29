@@ -7,7 +7,11 @@ const schemas = {
         .max(30)
         .lowercase()
         .required(),
-    email: Joi.string().email().required(),
+    email: Joi
+        .string()
+        .email()
+        .required()
+        .messages({'string.email': 'Email must be a valid email', 'string.empty': 'Email is not allowed to be empty'}),
     password: Joi
         .string()
         .pattern(new RegExp('^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$'))
