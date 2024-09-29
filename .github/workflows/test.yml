@@ -19,6 +19,5 @@ jobs:
         cache: 'npm'
     - name: Create .env file
       run: echo "TEST_DB_URI=${{ secrets.TEST_DB_URI }}" > .env
-      run: cat .env
     - run: npm ci
     - run: npm test
