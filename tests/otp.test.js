@@ -2,28 +2,29 @@ const request = require('supertest');
 const app = require('../app');
 const mongoose = require("mongoose");
 const User = require('../models/User');
-const getRedisClient = require("../config/redis");
-
-beforeEach(async () => {
-    await mongoose.connect( process.env.TEST_DB_URI);
-    await User.deleteMany({});
-    const user = new User({
-        username: "anass",
-        email: "anass@gmail.com",
-        password: "Anass@2000",
-        phone: "+212600000000",
-        address: "California, USA",
-        isVerified: true
-    });
-    await user.save();
-});
-
-afterEach(async () => {
-    await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
-});
+const getRedisClient = require('../config/redis');
 
 describe('POST /auth/otp-method', () => {
+    beforeAll(async () => {
+        await mongoose.connect( process.env.TEST_DB_URI);
+        const user = new User({
+            username: "anass",
+            email: "anass@gmail.com",
+            password: "Anass@2000",
+            phone: "+212600000000",
+            address: "California, USA",
+            isVerified: true
+        });
+        await user.save();
+    });
+
+    afterAll(async () => {
+        const redis = await getRedisClient();
+        await redis.disconnect();
+        await mongoose.connection.dropDatabase();
+        await mongoose.connection.close();
+    });
+
     it('should send OTP to user email', async () => {
         const userData = {
             email: "anass@gmail.com",
@@ -31,7 +32,8 @@ describe('POST /auth/otp-method', () => {
         }
         const response = await request(app)
             .post('/api/auth/otp-method')
-            .send(userData);
+            .send(userData)
+            .set('Accept', 'application/json');
         expect(response.status).toBe(200);
         expect(response.body.message).toBe('OTP sent successfully');
     });
@@ -43,7 +45,8 @@ describe('POST /auth/otp-method', () => {
         }
         const response = await request(app)
             .post('/api/auth/otp-method')
-            .send(userData);
+            .send(userData)
+            .set('Accept', 'application/json');
         expect(response.status).toBe(200);
         expect(response.body.message).toBe('OTP sent successfully');
     });

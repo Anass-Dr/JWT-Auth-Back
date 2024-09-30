@@ -3,26 +3,25 @@ const app = require('../app');
 const mongoose = require("mongoose");
 const User = require('../models/User');
 
-beforeEach(async () => {
-    await mongoose.connect( process.env.TEST_DB_URI);
-    await User.deleteMany({});
-    const user = new User({
-        username: "anass",
-        email: "anass@gmail.com",
-        password: "Anass@2000",
-        phone: "+212600000000",
-        address: "California, USA",
-        isVerified: true
-    });
-    await user.save();
-});
-
-afterEach(async () => {
-    await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
-});
-
 describe('POST /auth/login', () => {
+    beforeAll(async () => {
+        await mongoose.connect( process.env.TEST_DB_URI);
+        const user = new User({
+            username: "anass",
+            email: "anass@gmail.com",
+            password: "Anass@2000",
+            phone: "+212600000000",
+            address: "California, USA",
+            isVerified: true
+        });
+        await user.save();
+    });
+
+    afterAll(async () => {
+        await mongoose.connection.dropDatabase();
+        await mongoose.connection.close();
+    });
+
     it('should return 401 with Unauthorized device or location', async () => {
         const userData = {
             email: "anass@gmail.com",

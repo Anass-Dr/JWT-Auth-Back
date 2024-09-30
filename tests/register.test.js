@@ -2,21 +2,16 @@ const request = require('supertest');
 const app = require('../app');
 const mongoose = require("mongoose");
 
-beforeEach(async () => {
-    await mongoose.connect( process.env.TEST_DB_URI);
-    const collections = await mongoose.connection.db.collections();
-    for (let collection of collections) {
-        await collection.deleteMany({});
-    }
-});
-
-afterEach(async () => {
-    await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
-});
-
-
 describe('POST /auth/register', () => {
+    beforeAll(async () => {
+        await mongoose.connect( process.env.TEST_DB_URI);
+    });
+
+    afterAll(async () => {
+        await mongoose.connection.dropDatabase();
+        await mongoose.connection.close();
+    });
+
     it('should return 201 OK', async () => {
         const userData = {
             username: "anass",
