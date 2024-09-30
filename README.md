@@ -30,6 +30,36 @@ This application is suitable for developers looking to integrate JWT-based authe
    ```sh
     npm install
     ```
+4. Set Up Redis:
+
+Install Redis: If you don’t already have Redis installed, you can install it using one of the following methods:
+- Using Homebrew (macOS):
+    ```sh
+    brew install redis
+    ```
+- Using apt (Ubuntu):
+    ```sh
+    sudo apt update
+    sudo apt install redis-server
+    ```
+- Using Docker:
+  ```sh
+  docker run --name redis -p 6379:6379 -d redis
+  ```
+5. Start the Redis server:
+- Using Homebrew (macOS):
+    ```sh
+    brew services start redis
+    ```
+- Using apt (Ubuntu):
+    ```sh
+    sudo systemctl start redis
+    ```
+- Using Docker:
+    ```sh
+    docker start redis
+    ```
+  
 ## Quick Start Guide
 1. Create a `.env` file in the root directory and add the following environment variables:
    ```sh
