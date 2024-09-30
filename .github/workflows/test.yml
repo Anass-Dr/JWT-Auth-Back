@@ -7,8 +7,15 @@ on:
     branches: [ "dev" ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
 
     steps:
     - uses: actions/checkout@v4
@@ -20,4 +27,6 @@ jobs:
     - name: Create .env file
       run: echo "TEST_DB_URI=${{ secrets.TEST_DB_URI }}" > .env
     - run: npm ci
-    - run: npm test
+    - run: npm test register
+    - run: npm test login
+    - run: npm test otp
