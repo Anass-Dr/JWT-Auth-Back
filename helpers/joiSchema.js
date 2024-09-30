@@ -11,7 +11,7 @@ const schemas = {
         .string()
         .email()
         .required()
-        .messages({'string.email': 'Email must be a valid email', 'string.empty': 'Email is not allowed to be empty'}),
+        .messages({'string.pattern.base': 'Email must be a valid email', 'string.empty': 'Email is not allowed to be empty'}),
     password: Joi
         .string()
         .pattern(new RegExp('^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$'))
@@ -27,6 +27,9 @@ const schemas = {
         'string.pattern.base': 'Phone number must be in international format',
     }),
     address: Joi.string().required(),
+    method: Joi.string().valid('email', 'phone').required().messages({
+        'any.only': 'Method must be either email or phone'
+    }),
 };
 
 module.exports = (...fields) => {
