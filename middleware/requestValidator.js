@@ -9,11 +9,14 @@ async function validateRequest(req, res, next) {
         case "/api/auth/login":
             reqValidation = await inputValidate(req.body, ['email', 'password']);
             break;
-        case "/auth/forgetpassword":
+        case "/api/auth/forgetpassword":
             reqValidation = await inputValidate(req.body, ['email']);
             break;
-        case "/auth/resetpassword/:token":
+        case "/api/auth/resetpassword/:token":
             reqValidation = await inputValidate(req.body, ['password']);
+            break;
+        case "/api/auth/otp-method":
+            reqValidation = await inputValidate(req.body, ['email', 'method']);
             break;
         default:
             reqValidation = {isValid: true};
