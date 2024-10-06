@@ -20,11 +20,11 @@ This application is suitable for developers looking to integrate JWT-based authe
 ### Installation Instructions
 1. Clone the repository:
    ```sh
-   git clone https://github.com/Anass-Dr/JWT-Authentication.git
+   git clone https://github.com/Anass-Dr/JWT-Auth-Back.git
     ```
 2. Navigate to the project directory:
    ```sh
-   cd JWT-Authentication
+   cd JWT-Auth-Back
    ```
 3. Install the dependencies:
    ```sh
