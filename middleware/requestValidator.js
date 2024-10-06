@@ -18,6 +18,9 @@ async function validateRequest(req, res, next) {
         case "/api/auth/otp-method":
             reqValidation = await inputValidate(req.body, ['email', 'method']);
             break;
+        case "/api/auth/send-email-verification":
+            reqValidation = await inputValidate(req.body, ['email']);
+            break;
         default:
             reqValidation = {isValid: true};
     }
