@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3210:3000"
+    environment:
+      - APP_HOST=${APP_HOST}
+      - FRONT_APP_HOST=${FRONT_APP_HOST}
+      - DB_URI=${DB_URI}
+      - TEST_DB_URI=${TEST_DB_URI}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=587
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_PASS=${MAIL_PASS}
+      - MAIL_FROM="Allo Media"
+      - JWT_SECRET=${JWT_SECRET}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET=${AWS_SECRET}
+      - AWS_REGION=eu-north-1
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
+    driver: local
