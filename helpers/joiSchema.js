@@ -27,7 +27,7 @@ const schemas = {
         'string.pattern.base': 'Phone number must be in international format',
     }),
     address: Joi.string().required(),
-    method: Joi.string().valid('email', 'phone').required().messages({
+    method: Joi.string().valid('email', 'sms').required().messages({
         'any.only': 'Method must be either email or phone'
     }),
 };
