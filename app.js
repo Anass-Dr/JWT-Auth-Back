@@ -10,7 +10,7 @@ const app = express();
 
 const corsOptions = {
   origin: process.env.FRONT_APP_HOST,
-  optionsSuccessStatus: 200,
+  credentials: true,
 };
 
 // middlewares
