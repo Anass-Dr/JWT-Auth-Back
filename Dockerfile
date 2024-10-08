@@ -1,13 +1,13 @@
-FROM node:18-alpine AS base
+FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
 
-FROM base AS test
+FROM build AS test
 ENV JWT_SECRET=test
 RUN npm test
 
-FROM base AS build
+FROM build AS prod
 EXPOSE 3000
 CMD npm start
