@@ -21,8 +21,6 @@ jobs:
         with:
           target: test
           load: true
-          build-args: |
-            TEST_ENV_VAR=${{ secrets.TEST_ENV_VAR }}
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
