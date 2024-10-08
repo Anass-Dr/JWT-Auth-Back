@@ -5,6 +5,7 @@ RUN npm install
 COPY . .
 
 FROM base AS test
+ENV JWT_SECRET=test
 RUN npm test
 
 FROM base AS build
