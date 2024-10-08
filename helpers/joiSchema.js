@@ -18,6 +18,7 @@ const schemas = {
         .required()
         .messages({
             'string.pattern.base': 'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, and one number',
+            'string.empty': 'Password is not allowed to be empty'
         }),
     phone: Joi
         .string()
