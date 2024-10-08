@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repo
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
       - name: Install Nodejs and npm
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install Dependences
+      - name: Install Dependencies
         run: npm ci
       - name: Run tests
         run: npm test
