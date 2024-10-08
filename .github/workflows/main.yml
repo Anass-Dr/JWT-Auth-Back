@@ -18,5 +18,7 @@ jobs:
           node-version: 20
       - name: Install Dependencies
         run: npm ci
+      - name: Add env variables
+        run: echo "JWT_SECRET=test" > .env
       - name: Run tests
         run: npm test
