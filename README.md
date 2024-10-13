@@ -54,7 +54,7 @@ This application is suitable for developers looking to integrate JWT-based authe
 ### Overview
 The project structure is as follows:
 ```
-JWT-Authentication/
+JWT-Auth-Back/
 ├── config/
 ├── controllers/
 ├── middleware/
@@ -68,6 +68,10 @@ JWT-Authentication/
 │   └── mail/
 ├── .env
 ├── app.js
+├── docker-compose.yml
+├── Dockerfile
+├── package.json
+├── package-lock.json
 ├── README.md
 └── server.js
 ```
@@ -84,6 +88,10 @@ JWT-Authentication/
 - `validation/`: Contains validation logic for user inputs.
 - `.env`: Contains the environment variables for the application.
 - `app.js`: Contains the main application file.
+- `docker-compose.yml`: Docker Compose configuration file.
+- `Dockerfile`: Dockerfile for building the application image.
+- `package.json`: Contains the npm dependencies and scripts.
+- `package-lock.json`: Contains the exact version of the npm dependencies.
 - `server.js`: Server entry point file that starts the Express server.
 
 
@@ -127,18 +135,23 @@ JWT-Authentication/
 - `redis`: A high performance Node.js Redis client
 - `ua-parser-js`: Lightweight JavaScript-based User-Agent string parser
 
-## 6. CI with GitHub Actions
+## 6. CI/CD with GitHub Actions
 
-This project uses GitHub Actions for continuous integration (CI). The workflow defined in `.github/workflows/main.yml` runs whenever a push is made to the `dev` branch. The workflow performs the following steps:
+This project uses GitHub Actions for continuous integration (CI) and continuous deployment (CD). The workflow defined in .github/workflows/main.yml runs whenever a push is made to the main branch. The workflow performs the following steps:
 
-1. Sets up Node.js.
-2. Installs the dependencies.
-3. Runs the tests.
+1. Login to Docker Hub: Authenticates with Docker Hub using the provided credentials.
+2. Set up Docker Buildx: Configures Docker Buildx for building multi-platform images.
+3. Build and test: Builds the Docker image and runs tests.
+4. Build and push: Builds the Docker image for multiple platforms and pushes it to Docker Hub.
+5. Deploy to AWS ECR: Publishes the Docker image to AWS Elastic Container Registry (ECR).
 
 ### Secrets
-
+The following secrets are used in the GitHub Actions workflow:
 ```
-TEST_DB_URI=: ${{ secrets.TEST_DB_URI }}
+DOCKER_EMAIL: Docker Hub email.
+DOCKERHUB_TOKEN: Docker Hub access token.
+AWS_ACCESS_KEY_ID: AWS access key ID.
+AWS_SECRET_ACCESS_KEY: AWS secret access key.
 ```
 
 You can add these secrets in the "Settings" tab of your GitHub repository under "Secrets and variables" > "Actions".  This setup ensures that your application is automatically deployed whenever you push changes to the dev branch.
