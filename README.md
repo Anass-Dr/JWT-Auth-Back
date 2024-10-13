@@ -13,11 +13,6 @@ This application is suitable for developers looking to integrate JWT-based authe
 
 ## 2. Getting Started
 
-### Prerequisites
-- Node.js
-- npm
-
-### Installation Instructions
 1. Clone the repository:
    ```sh
    git clone https://github.com/Anass-Dr/JWT-Auth-Back.git
@@ -26,42 +21,7 @@ This application is suitable for developers looking to integrate JWT-based authe
    ```sh
    cd JWT-Auth-Back
    ```
-3. Install the dependencies:
-   ```sh
-    npm install
-    ```
-4. Set Up Redis:
-
-Install Redis: If you don’t already have Redis installed, you can install it using one of the following methods:
-- Using Homebrew (macOS):
-    ```sh
-    brew install redis
-    ```
-- Using apt (Ubuntu):
-    ```sh
-    sudo apt update
-    sudo apt install redis-server
-    ```
-- Using Docker:
-  ```sh
-  docker run --name redis -p 6379:6379 -d redis
-  ```
-5. Start the Redis server:
-- Using Homebrew (macOS):
-    ```sh
-    brew services start redis
-    ```
-- Using apt (Ubuntu):
-    ```sh
-    sudo systemctl start redis
-    ```
-- Using Docker:
-    ```sh
-    docker start redis
-    ```
-  
-## Quick Start Guide
-1. Create a `.env` file in the root directory and add the following environment variables:
+3. Create a `.env` file in the root directory and add the following environment variables:
    ```sh
     APP_HOST=localhost
    
@@ -83,11 +43,11 @@ Install Redis: If you don’t already have Redis installed, you can install it u
     AWS_SECRET_ACCESS_KEY=
     AWS_REGION=
     ```
-2. Start the server:
+2. Build and start the Docker containers:
     ```sh
-     npm start
+     docker-compose up --build -d
      ```
-3. Access the application at `http://localhost:3000`.
+3. Access the application at `http://localhost:3210`.
 
 ## 3. Project Structure
 
